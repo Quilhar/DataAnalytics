@@ -68,7 +68,37 @@ def quartiles(dataset):
     
     return quartile_summary
 
+def regular_plot(dataset, xaxis_label, yaxis_label, title, color):
+    '''
+    Function to create a regular plot of a dataset:
+    - dataset (list or array): A list or array of numerical values
+    - xaxis_label (str): Label for the x-axis
+    - yaxis_label (str): Label for the y-axis
+    - title (str): Title of the plot
+    - color (str): Color of the line
+    '''
+    
+    data = dataset
+    
+    # Creating regular plot
+    plt.plot(data, color=color, linestyle='-', marker='o')
+    plt.xlabel(xaxis_label)
+    plt.ylabel(yaxis_label)
+    plt.title(title)
+    
+    plt.tight_layout()
+
 def histogram(dataset, xaxis_label, yaxis_label, title, color, edgecolor):
+    '''
+    Function to create a histogram of a dataset:
+    - dataset (list or array): A list or array of numerical values
+    - xaxis_label (str): Label for the x-axis
+    - yaxis_label (str): Label for the y-axis
+    - title (str): Title of the histogram
+    - color (str): Color of the bars
+    - edgecolor (str): Color of the edges of the bars
+    '''
+    
     data = dataset
     
     # Creating histogram
@@ -84,6 +114,16 @@ def histogram(dataset, xaxis_label, yaxis_label, title, color, edgecolor):
     plt.tight_layout()
     
 def piechart(dataset, labels, title, colors, explode, startangle, autopct):
+    '''
+    Function to create a pie chart of a dataset:
+    - dataset (list or array): A list or array of numerical values
+    - labels (list): A list of labels for each slice
+    - title (str): Title of the pie chart
+    - colors (list): A list of colors for each slice
+    - explode (list): A list of values to offset each slice
+    - startangle (int): Starting angle of the pie chart
+    - autopct (str): Format string for the percentage labels
+    '''
     data = dataset
     
     # Creating pie chart
@@ -93,6 +133,14 @@ def piechart(dataset, labels, title, colors, explode, startangle, autopct):
     plt.tight_layout()
 
 def boxplot(dataset, xaxis_label, yaxis_label, title, color):
+    '''
+    Function to create a box plot of a dataset:
+    - dataset (list or array): A list or array of numerical values
+    - xaxis_label (str): Label for the x-axis
+    - yaxis_label (str): Label for the y-axis
+    - title (str): Title of the box plot
+    - color (str): Color of the box
+    '''
     data = dataset
     
     # Creating box plot
