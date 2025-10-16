@@ -68,7 +68,7 @@ def quartiles(dataset):
     
     return quartile_summary
 
-def regular_plot(dataset, xaxis_label, yaxis_label, title, color):
+def regular_plot(dataset, xaxis_label = '', yaxis_label = '', title = '', color = ''):
     '''
     Function to create a regular plot of a dataset:
     - dataset (list or array): A list or array of numerical values
@@ -81,14 +81,14 @@ def regular_plot(dataset, xaxis_label, yaxis_label, title, color):
     data = dataset
     
     # Creating regular plot
-    plt.plot(data, color=color, linestyle='-', marker='o')
+    plt.plot(data, color, linestyle='-', marker='o')
     plt.xlabel(xaxis_label)
     plt.ylabel(yaxis_label)
     plt.title(title)
     
     plt.tight_layout()
 
-def histogram(dataset, xaxis_label, yaxis_label, title, color, edgecolor):
+def histogram(dataset, xaxis_label = '', yaxis_label = '', title = '', color = '', edgecolor = ''):
     '''
     Function to create a histogram of a dataset:
     - dataset (list or array): A list or array of numerical values
@@ -103,7 +103,7 @@ def histogram(dataset, xaxis_label, yaxis_label, title, color, edgecolor):
     
     # Creating histogram
     
-    # Use numpy to calculate the edges of the bins, using the 'auto' method, which calculates the optimal number of bins based using the Freedman-Diaconis, and Sturges methods
+    # Use numpy to calculate the edges of the bins, using the 'auto' method, which calculates the optimal number of bins based on using the Freedman-Diaconis, and Sturges methods
     bins_edges_auto = np.histogram_bin_edges(data, bins='auto')
     
     plt.hist(data, bins=bins_edges_auto, edgecolor = edgecolor, color = color)
@@ -113,7 +113,7 @@ def histogram(dataset, xaxis_label, yaxis_label, title, color, edgecolor):
     
     plt.tight_layout()
     
-def piechart(dataset, labels, title, colors, explode, startangle, autopct):
+def piechart(dataset, labels, title = '', colors = '', explode = '', startangle = '', autopct = 'autopct'):
     '''
     Function to create a pie chart of a dataset:
     - dataset (list or array): A list or array of numerical values
@@ -132,7 +132,7 @@ def piechart(dataset, labels, title, colors, explode, startangle, autopct):
     
     plt.tight_layout()
 
-def boxplot(dataset, xaxis_label, yaxis_label, title, color):
+def boxplot(dataset, xaxis_label, yaxis_label, title):
     '''
     Function to create a box plot of a dataset:
     - dataset (list or array): A list or array of numerical values
@@ -144,7 +144,7 @@ def boxplot(dataset, xaxis_label, yaxis_label, title, color):
     data = dataset
     
     # Creating box plot
-    plt.boxplot(data, patch_artist=True, boxprops=dict(facecolor=color))
+    plt.boxplot(data)
     plt.ylabel(yaxis_label)
     plt.xlabel(xaxis_label)
     plt.title(title)
