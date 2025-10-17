@@ -132,19 +132,20 @@ def piechart(dataset, labels, title = '', colors = '', explode = '', startangle 
     
     plt.tight_layout()
 
-def boxplot(dataset, xaxis_label, yaxis_label, title):
+def boxplot(dataset, xaxis_label = '', yaxis_label = '', title = '', vert = True, color = 'white'):
     '''
     Function to create a box plot of a dataset:
     - dataset (list or array): A list or array of numerical values
     - xaxis_label (str): Label for the x-axis
     - yaxis_label (str): Label for the y-axis
     - title (str): Title of the box plot
+    - vert (bool): Orientation of the box plot (True for vertical, False for horizontal)
     - color (str): Color of the box
     '''
     data = dataset
     
     # Creating box plot
-    plt.boxplot(data)
+    plt.boxplot(data, vert = vert, patch_artist = True, boxprops = dict(facecolor = color))
     plt.ylabel(yaxis_label)
     plt.xlabel(xaxis_label)
     plt.title(title)
