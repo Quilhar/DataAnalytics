@@ -192,8 +192,10 @@ def least_squares_matrixes(x_data, y_data):
                 Left hand side least squares matrix
             least_squares_matrix_right : matrix
                 Right hand side least squares matrix '''
-         
+        
+    # print(x_data)
     n = len(x_data)
+    
     
     x_array = np.array(x_data)
     y_array = np.array(y_data)
@@ -290,4 +292,3 @@ def graph__least_squares(x_data, y_data, x_axis = '', y_axix = '', title = '', f
     plt.ylabel(y_axix)
     plt.title(title)
     plt.legend()
-    plt.show()
