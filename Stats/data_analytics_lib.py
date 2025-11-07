@@ -292,3 +292,96 @@ def graph__least_squares(x_data, y_data, x_axis = '', y_axix = '', title = '', f
     plt.ylabel(y_axix)
     plt.title(title)
     plt.legend()
+
+
+def calculate_residuals(x_data, y_data, fit_type = 1):
+    
+    x_array = np.array(x_data)
+    y_array = np.array(y_data)
+    
+    least_square_line_y_values = []
+    
+    fit_residual = []
+    
+    if fit_type == 1:
+        least_squares_coefficients = least_squares_coefficient(x_array, y_array)
+        
+        for x in x_array:
+            least_square_line_y_values.append((least_squares_coefficients[0][0] * x) + least_squares_coefficients[0][1])
+        
+        for y in y_array:
+            fit_residual.append(y - least_square_line_y_values[len(fit_residual)])
+    
+        residual_mean = np.mean(fit_residual)
+        residual_std = np.std(fit_residual)
+        
+    return fit_residual, residual_mean, residual_std
+
+def determine_outliers(residuals, mean, std_dev, n = 2):
+    outlier_indices = []
+    bound1 = mean + n * std_dev
+    bound2 = mean - n * std_dev
+    
+    for i in range(len(residuals)):
+        if residuals[i] > bound1 or residuals[i] < bound2:
+            outlier_indices.append(i)
+    
+    return outlier_indices 
+
+def remove_outliers(x_data, y_data, outlier_indices):
+    x_cleaned = []
+    y_cleaned = []
+    
+    for i in range(len(x_data)):
+        if i not in outlier_indices:
+            x_cleaned.append(x_data[i])
+            y_cleaned.append(y_data[i])
+        
+    
+    return x_cleaned, y_cleaned
+
+def error_bar_bounds(x_data, residual_mean, residual_std_dev, correlation_coefficients):
+    x = x_data
+    correlation_coefficients = correlation_coefficients
+    residual_mean = residual_mean
+    residual_std_dev = residual_std_dev
+    
+    
+    upper_boundx = []
+    upper_boundy = []
+
+    lower_boundx = []
+    lower_boundy = []
+
+    upper_boundx.append(np.min(x))
+    upper_boundx.append(np.max(x))
+
+    lower_boundx.append(np.min(x))
+    lower_boundx.append(np.max(x))
+
+    y_upper_min = (correlation_coefficients[0][0]*np.min(x)) + (correlation_coefficients[0][1] - (residual_mean - 2 * residual_std_dev))
+    y_upper_max = (correlation_coefficients[0][0]*np.max(x)) + (correlation_coefficients[0][1] + (residual_mean + 2 * residual_std_dev))
+
+    upper_boundy.append(y_upper_min)
+    upper_boundy.append(y_upper_max)
+
+    y_lower_min = (correlation_coefficients[0][0]*np.min(x)) + (correlation_coefficients[0][1] - (residual_mean + 2 * residual_std_dev))
+    y_lower_max = (correlation_coefficients[0][0]*np.max(x)) + (correlation_coefficients[0][1] + (residual_mean - 2 * residual_std_dev))
+
+    lower_boundy.append(y_lower_min)
+    lower_boundy.append(y_lower_max)
+    
+    return upper_boundy, upper_boundx, lower_boundx, lower_boundy
+
+def RMSE(x_data, y_data):
+    n = len(x_data)
+    
+    fit_residual, residual_mean, residual_std = calculate_residuals(x_data, y_data)
+    
+    sum_squared_errors = 0.0
+    for residual in fit_residual:
+        sum_squared_errors += residual ** 2
+        
+    rmse = np.sqrt(sum_squared_errors / n)
+    
+    return rmse
