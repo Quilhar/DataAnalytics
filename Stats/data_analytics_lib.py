@@ -262,7 +262,7 @@ def least_squares_coefficient(x_list, y_list):
     
     return least_squares_coefficients
 
-def graph__least_squares(x_data, y_data, x_axis = '', y_axix = '', title = '', fit = 1):
+def graph__least_squares(x_data, y_data, x_axis = '', y_axis = '', title = '', fit = 1):
     ''' Function to graph least squares fit along with data points
         x_data : list
             List of data points for X
@@ -289,7 +289,7 @@ def graph__least_squares(x_data, y_data, x_axis = '', y_axix = '', title = '', f
         plt.plot(x_data, y_values, color='red', label='Least Squares Fit')
     
     plt.xlabel(x_axis)
-    plt.ylabel(y_axix)
+    plt.ylabel(y_axis)
     plt.title(title)
     plt.legend()
 
