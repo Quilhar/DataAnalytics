@@ -242,9 +242,9 @@ def matrix_inverse(A, ifit = 1):
         a_inverse = [[a2, b2],
                     [c2, d2]]
         
-        return a_inverse
+    return a_inverse
 
-def least_squares_coefficient(x_list, y_list):
+def least_squares_coefficient(x_list, y_list, ifit = 1):
     ''' Function to find least squares coefficients for linear fit
         A : matrix
             Left hand side least squares matrix
@@ -255,10 +255,18 @@ def least_squares_coefficient(x_list, y_list):
     
     A = matrix_inverse(A, 1)
     
-    a = A[0][0] * B[0][0] + A[0][1] * B[1][0]
-    b = A[1][0] * B[0][0] + A[1][1] * B[1][0]
-    
-    least_squares_coefficients = [[a, b]]
+    if ifit == 1:
+        a = A[0][0] * B[0][0] + A[0][1] * B[1][0]
+        b = A[1][0] * B[0][0] + A[1][1] * B[1][0]
+        
+        least_squares_coefficients = [[a, b]]
+        
+    # if ifit == 2 :
+    #     a = A[0][0] * B[0][0] + A[0][1] * B[1][0] + A[0][2] * B[2][0]
+    #     b = A[1][0] * B[0][0] + A[1][1] * B[1][0] + A[1][2] * B[2][0]
+    #     c = A[2][0] * B[0][0] + A[2][1] * B[1][0] + A[2][2] * B[2][0]
+        
+    #     least_squares_coefficients = [[a, b, c]]
     
     return least_squares_coefficients
 
@@ -340,12 +348,12 @@ def remove_outliers(x_data, y_data, outlier_indices):
     
     return x_cleaned, y_cleaned
 
-def error_bar_bounds(x_data, residual_mean, residual_std_dev, correlation_coefficients):
+def error_bar_bounds(x_data, y_data, fit = 1):
     x = x_data
-    correlation_coefficients = correlation_coefficients
-    residual_mean = residual_mean
-    residual_std_dev = residual_std_dev
+    y = y_data
     
+    residuals, residual_mean, residual_std_dev= calculate_residuals(x, y)
+    correlation_coefficients = least_squares_coefficient(x, y, ifit = fit)
     
     upper_boundx = []
     upper_boundy = []
