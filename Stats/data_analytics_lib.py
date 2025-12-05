@@ -152,6 +152,24 @@ def boxplot(dataset, xaxis_label = '', yaxis_label = '', title = '', vert = True
     
     plt.tight_layout()
 
+def plot_weighted_moving_average_data(x_data, y_data, weight_list, x_label, y_label, title, color = 'blue', filtered_color = 'red'):
+    
+    x = x_data
+    y = y_data
+    
+    filtered_x, filtered_y = weighted_moving_average_filter_for_graphs(x_data, y_data, weight_list)
+    
+    plt.plot(x, y, color = color)
+    
+    plt.plot(filtered_x, filtered_y, color = filtered_color)
+    
+    plt.xlabel(x_label)
+    
+    plt.ylabel(y_label)
+    
+    plt.title(title)
+    
+    plt.tight_layout()
 ############################################################################################## Lecture 3 Functions ###########################################################################################
 
 def find_data_correlation(x_list, y_list):
@@ -181,7 +199,7 @@ def find_data_correlation(x_list, y_list):
             
     return corelation_coefficient
     
-def least_squares_matrixes(x_data, y_data):
+def least_squares_matrixes(x_data, y_data, fit = 1):
     ''' Function to find the least squares matrix
         x_data : list
             List of data points for X
@@ -196,19 +214,36 @@ def least_squares_matrixes(x_data, y_data):
     # print(x_data)
     n = len(x_data)
     
-    
-    x_array = np.array(x_data)
-    y_array = np.array(y_data)
-    
-    a = sum(x_array ** 2)
-    b = sum(x_array)
-    c = b
-    d = n
-    e = sum(x_array * y_array)
-    f = sum(y_array)
-    
-    least_squares_matrix_left = [[a, b], [c, d]]
-    least_squares_matrix_right = [[e], [f]]
+    if fit == 1:
+        x_array = np.array(x_data)
+        y_array = np.array(y_data)
+      
+        a = sum(x_array ** 2)
+        b = sum(x_array)
+        c = b
+        d = n
+        e = sum(x_array * y_array)
+        f = sum(y_array)
+        
+        least_squares_matrix_left = [[a, b], [c, d]]
+        least_squares_matrix_right = [[e], [f]]
+        
+    if fit == 2:
+        x_array = np.array(x_data)
+        y_array = np.array(y_data)
+        
+        a = sum(x_array ** 4)
+        b = sum(x_array ** 3)
+        c = sum(x_array ** 2)
+        d = sum(x_array)
+        e = n
+        
+        f = sum((x_array ** 2) * y_array)
+        g = sum(x_array * y_array)
+        h = sum(y_array)
+        
+        least_squares_matrix_left = [[a, b, c], [b, c, d], [c, d, e]]
+        least_squares_matrix_right = [[f], [g], [h]]
     
     return least_squares_matrix_left, least_squares_matrix_right
 
@@ -242,6 +277,35 @@ def matrix_inverse(A, ifit = 1):
         a_inverse = [[a2, b2],
                     [c2, d2]]
         
+    if ifit == 2:
+        a_matrix = A
+        
+        a1 = a_matrix[0][0]
+        b1 = a_matrix[0][1]
+        c1 = a_matrix[0][2]
+        d1 = a_matrix[1][0]
+        e1 = a_matrix[1][1]
+        f1 = a_matrix[1][2]
+        g1 = a_matrix[2][0]
+        h1 = a_matrix[2][1]
+        i1 = a_matrix[2][2]
+        
+        det = (a1 * (e1 * i1 - f1 * h1) - b1 * (d1 * i1 - f1 * g1) + c1 * (d1 * h1 - e1 * g1))
+        
+        a2 = (e1 * i1 - f1 * h1)/det
+        b2 = (c1 * h1 - b1 * i1)/det
+        c2 = (b1 * f1 - c1 * e1)/det
+        d2 = (f1 * g1 - d1 * i1)/det
+        e2 = (a1 * i1 - c1 * g1)/det
+        f2 = (c1 * d1 - a1 * f1)/det
+        g2 = (d1 * h1 - e1 * g1)/det
+        h2 = (b1 * g1 - a1 * h1)/det
+        i2 = (a1 * e1 - b1 * d1)/det
+        
+        a_inverse = [[a2, b2, c2],
+                     [d2, e2, f2],
+                     [g2, h2, i2]]
+        
     return a_inverse
 
 def least_squares_coefficient(x_list, y_list, ifit = 1):
@@ -251,22 +315,22 @@ def least_squares_coefficient(x_list, y_list, ifit = 1):
         B : matrix
             Right hand side least squares matrix '''
 
-    A, B = least_squares_matrixes(x_list, y_list)
+    A, B = least_squares_matrixes(x_list, y_list, fit=ifit)
     
-    A = matrix_inverse(A, 1)
+    A = matrix_inverse(A, ifit)
+    
+    a = A[0][0] * B[0][0] + A[0][1] * B[1][0] + A[0][2] * B[2][0]
+    b = A[1][0] * B[0][0] + A[1][1] * B[1][0] + A[1][2] * B[2][0]
+    c = A[2][0] * B[0][0] + A[2][1] * B[1][0] + A[2][2] * B[2][0]
     
     if ifit == 1:
-        a = A[0][0] * B[0][0] + A[0][1] * B[1][0]
-        b = A[1][0] * B[0][0] + A[1][1] * B[1][0]
+
         
         least_squares_coefficients = [[a, b]]
         
-    # if ifit == 2 :
-    #     a = A[0][0] * B[0][0] + A[0][1] * B[1][0] + A[0][2] * B[2][0]
-    #     b = A[1][0] * B[0][0] + A[1][1] * B[1][0] + A[1][2] * B[2][0]
-    #     c = A[2][0] * B[0][0] + A[2][1] * B[1][0] + A[2][2] * B[2][0]
-        
-    #     least_squares_coefficients = [[a, b, c]]
+    if ifit == 2 :
+
+        least_squares_coefficients = [[a, b, c]]
     
     return least_squares_coefficients
 
@@ -285,24 +349,35 @@ def graph__least_squares(x_data, y_data, x_axis = '', y_axis = '', title = '', f
         fit : int
             Degree of polynomial fit (1 for linear, 2 for quadratic)'''
     
-    coefficients = least_squares_coefficient(x_data, y_data)
+    coefficients = least_squares_coefficient(x_data, y_data, ifit = fit)
     
     plt.scatter(x_data, y_data, color='blue', label='Data Points')
     
+    a = coefficients[0][0]
+    b = coefficients[0][1]
+    c = coefficients[0][2]
+    
     if fit == 1:
-        a = coefficients[0][0]
-        b = coefficients[0][1]
+
+        x_fit = np.linspace(min(x_data), max(x_data), 100)
+        y_fit = a * x_fit + b
+        plt.plot(x_fit, y_fit, color='blue', label='Least Squares Fit')
         
-        y_values = [a * x + b for x in x_data]
-        plt.plot(x_data, y_values, color='red', label='Least Squares Fit')
+    if fit == 2:
+        
+        x_fit = np.linspace(min(x_data), max(x_data), 100)
+        y_fit = a * x_fit ** 2 + b * x_fit + c
+        plt.plot(x_fit, y_fit, color='blue', label='Least Squares Fit')
+
     
     plt.xlabel(x_axis)
     plt.ylabel(y_axis)
     plt.title(title)
     plt.legend()
+    
 
 
-def calculate_residuals(x_data, y_data, fit_type = 1):
+def calculate_residuals(x_data, y_data, ifit = 1):
     
     x_array = np.array(x_data)
     y_array = np.array(y_data)
@@ -311,11 +386,23 @@ def calculate_residuals(x_data, y_data, fit_type = 1):
     
     fit_residual = []
     
-    if fit_type == 1:
+    if ifit == 1:
         least_squares_coefficients = least_squares_coefficient(x_array, y_array)
         
         for x in x_array:
             least_square_line_y_values.append((least_squares_coefficients[0][0] * x) + least_squares_coefficients[0][1])
+        
+        for y in y_array:
+            fit_residual.append(y - least_square_line_y_values[len(fit_residual)])
+    
+        residual_mean = np.mean(fit_residual)
+        residual_std = np.std(fit_residual)
+        
+    if ifit == 2:
+        least_squares_coefficients = least_squares_coefficient(x_array, y_array, ifit = 2)
+        
+        for x in x_array:
+            least_square_line_y_values.append((least_squares_coefficients[0][0] * (x ** 2)) + (least_squares_coefficients[0][1] * x) + least_squares_coefficients[0][2])
         
         for y in y_array:
             fit_residual.append(y - least_square_line_y_values[len(fit_residual)])
@@ -352,7 +439,7 @@ def error_bar_bounds(x_data, y_data, fit = 1):
     x = x_data
     y = y_data
     
-    residuals, residual_mean, residual_std_dev= calculate_residuals(x, y)
+    residuals, residual_mean, residual_std_dev = calculate_residuals(x, y, ifit = fit)
     correlation_coefficients = least_squares_coefficient(x, y, ifit = fit)
     
     upper_boundx = []
@@ -360,26 +447,51 @@ def error_bar_bounds(x_data, y_data, fit = 1):
 
     lower_boundx = []
     lower_boundy = []
-
-    upper_boundx.append(np.min(x))
-    upper_boundx.append(np.max(x))
-
-    lower_boundx.append(np.min(x))
-    lower_boundx.append(np.max(x))
-
-    y_upper_min = (correlation_coefficients[0][0]*np.min(x)) + (correlation_coefficients[0][1] - (residual_mean - 2 * residual_std_dev))
-    y_upper_max = (correlation_coefficients[0][0]*np.max(x)) + (correlation_coefficients[0][1] + (residual_mean + 2 * residual_std_dev))
-
-    upper_boundy.append(y_upper_min)
-    upper_boundy.append(y_upper_max)
-
-    y_lower_min = (correlation_coefficients[0][0]*np.min(x)) + (correlation_coefficients[0][1] - (residual_mean + 2 * residual_std_dev))
-    y_lower_max = (correlation_coefficients[0][0]*np.max(x)) + (correlation_coefficients[0][1] + (residual_mean - 2 * residual_std_dev))
-
-    lower_boundy.append(y_lower_min)
-    lower_boundy.append(y_lower_max)
     
+    if fit == 1:
+        
+        upper_boundx.append(np.min(x))
+        upper_boundx.append(np.max(x))
+
+        lower_boundx.append(np.min(x))
+        lower_boundx.append(np.max(x))
+
+        y_upper_min = (correlation_coefficients[0][0]*np.min(x)) + (correlation_coefficients[0][1] - (residual_mean - 2 * residual_std_dev))
+        y_upper_max = (correlation_coefficients[0][0]*np.max(x)) + (correlation_coefficients[0][1] + (residual_mean + 2 * residual_std_dev))
+
+        upper_boundy.append(y_upper_min)
+        upper_boundy.append(y_upper_max)
+
+        y_lower_min = (correlation_coefficients[0][0]*np.min(x)) + (correlation_coefficients[0][1] - (residual_mean + 2 * residual_std_dev))
+        y_lower_max = (correlation_coefficients[0][0]*np.max(x)) + (correlation_coefficients[0][1] + (residual_mean - 2 * residual_std_dev))
+
+        lower_boundy.append(y_lower_min)
+        lower_boundy.append(y_lower_max)
+        
+    if fit == 2:
+        
+        for i in range(len(x)):
+            upper_boundx.append(x[i])
+            lower_boundx.append(x[i])
+            
+            y_upper = (correlation_coefficients[0][0] * (x[i] ** 2)) + (correlation_coefficients[0][1] * x[i]) + correlation_coefficients[0][2] + (residual_mean + 2 * residual_std_dev)
+            y_lower = (correlation_coefficients[0][0] * (x[i] ** 2)) + (correlation_coefficients[0][1] * x[i]) + correlation_coefficients[0][2] - (residual_mean + 2 * residual_std_dev)
+            
+            upper_boundy.append(y_upper)
+            lower_boundy.append(y_lower)
+            
     return upper_boundy, upper_boundx, lower_boundx, lower_boundy
+
+def graphing_error_bars(x_data, y_data, fit = 1):
+    upper_boundy, upper_boundx, lower_boundx, lower_boundy = error_bar_bounds(x_data, y_data, fit)
+        
+    plt.plot(upper_boundx, upper_boundy, color='red', linestyle='--', label='Upper Bound')
+    plt.plot(lower_boundx, lower_boundy, color='red', linestyle='--', label='Lower Bound')
+    
+    plt.xlabel('X values')
+    plt.ylabel('Y values')
+    plt.title('Error Bounds for Least Squares Fit')
+    plt.legend()
 
 def RMSE(x_data, y_data):
     n = len(x_data)
@@ -393,3 +505,77 @@ def RMSE(x_data, y_data):
     rmse = np.sqrt(sum_squared_errors / n)
     
     return rmse
+
+#########################################################################
+
+def weighted_moving_average_filter(data_set, weight_list):
+    x = data_set
+    n = len(weight_list)
+    filter_length = n
+    
+    filtered_data = []
+    
+    weight_sum = sum(weight_list)
+    
+    for i in range(len(data_set) - filter_length + 1):
+        
+        numerator = 0
+        
+        for a in range(filter_length):
+            
+            numerator += data_set[i + a] * weight_list[a]
+            
+        filtered_value = numerator / weight_sum
+        filtered_data.append(filtered_value)
+            
+    return filtered_data
+
+def weighted_moving_average_filter_for_graphs(x_data, y_data, weight_list):
+    x = x_data
+    y = y_data
+    n = len(weight_list)
+    filter_length = n
+    
+    filtered_data_x = []
+    filtered_data_y = []
+    
+    weight_sum = sum(weight_list)
+    
+    for i in range(len(x) - filter_length + 1):
+        
+        numerator_x = 0
+        
+        for a in range(filter_length):
+            
+            numerator_x += x_data[i + a] * weight_list[a]
+            
+        filtered_value_x = numerator_x / weight_sum
+        filtered_data_x.append(filtered_value_x)
+        
+    for i in range(len(y) - filter_length + 1):
+        
+        numerator_y = 0
+        
+        for b in range(filter_length):
+            
+            numerator_y += y_data[i + b] * weight_list[b]
+            
+        filtered_value_y = numerator_y / weight_sum
+        filtered_data_y.append(filtered_value_y)
+            
+    return filtered_data_x, filtered_data_y
+
+def fading_moving_average_filter(data_set, weight_list):
+    x = data_set
+    n = len(weight_list)
+    
+    filtered_data = []
+    
+    for i in range(len(data_set) - n + 1):
+        
+        if i == 0:
+            filtered_data.append(x[i])
+        
+        filtered_data.append((weight_list[0] * x[i + n - 1] + (weight_list[1] * filtered_data[i])))
+        
+    return filtered_data
