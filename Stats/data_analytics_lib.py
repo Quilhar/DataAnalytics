@@ -159,15 +159,17 @@ def plot_weighted_moving_average_data(x_data, y_data, weight_list, x_label, y_la
     
     filtered_x, filtered_y = weighted_moving_average_filter_for_graphs(x_data, y_data, weight_list)
     
-    plt.plot(x, y, color = color)
+    plt.plot(x, y, color = color, label = 'Raw Data')
     
-    plt.plot(filtered_x, filtered_y, color = filtered_color)
+    plt.plot(filtered_x, filtered_y, color = filtered_color, label = 'Weighted Moving Average Filtered Data')
     
     plt.xlabel(x_label)
     
     plt.ylabel(y_label)
     
     plt.title(title)
+    
+    plt.legend()
     
     plt.tight_layout()
 ############################################################################################## Lecture 3 Functions ###########################################################################################
