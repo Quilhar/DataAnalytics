@@ -317,21 +317,23 @@ def least_squares_coefficient(x_list, y_list, ifit = 1):
         B : matrix
             Right hand side least squares matrix '''
 
+    ifit = ifit
+    
     A, B = least_squares_matrixes(x_list, y_list, fit=ifit)
     
     A = matrix_inverse(A, ifit)
     
-    a = A[0][0] * B[0][0] + A[0][1] * B[1][0] + A[0][2] * B[2][0]
-    b = A[1][0] * B[0][0] + A[1][1] * B[1][0] + A[1][2] * B[2][0]
-    c = A[2][0] * B[0][0] + A[2][1] * B[1][0] + A[2][2] * B[2][0]
-    
-    if ifit == 1:
 
+    if ifit == 1:
+        a = A[0][0] * B[0][0] + A[0][1] * B[1][0] 
+        b = A[1][0] * B[0][0] + A[1][1] * B[1][0] 
         
         least_squares_coefficients = [[a, b]]
         
     if ifit == 2 :
-
+        a = A[0][0] * B[0][0] + A[0][1] * B[1][0] + A[0][2] * B[2][0]
+        b = A[1][0] * B[0][0] + A[1][1] * B[1][0] + A[1][2] * B[2][0]
+        c = A[2][0] * B[0][0] + A[2][1] * B[1][0] + A[2][2] * B[2][0]
         least_squares_coefficients = [[a, b, c]]
     
     return least_squares_coefficients
