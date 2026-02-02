@@ -172,6 +172,28 @@ def plot_weighted_moving_average_data(x_data, y_data, weight_list, x_label, y_la
     plt.legend()
     
     plt.tight_layout()
+    
+def xy_plot(x_data, y_data, xaxis_label = '', yaxis_label = '', title = '', color = '', marker = 'o'):
+    '''
+    Function to create an XY plot of two datasets:
+    - x_data (list or array): A list or array of numerical values for the x-axis
+    - y_data (list or array): A list or array of numerical values for the y-axis
+    - xaxis_label (str): Label for the x-axis
+    - yaxis_label (str): Label for the y-axis
+    - title (str): Title of the plot
+    - color (str): Color of the points
+    '''
+    
+    x = x_data
+    y = y_data
+    
+    # Creating XY plot
+    plt.plot(x, y, color=color, marker=marker)
+    plt.xlabel(xaxis_label)
+    plt.ylabel(yaxis_label)
+    plt.title(title)
+    
+    plt.tight_layout()
 ############################################################################################## Lecture 3 Functions ###########################################################################################
 
 def find_data_correlation(x_list, y_list):
