@@ -532,6 +532,20 @@ def RMSE(x_data, y_data):
     
     return rmse
 
+def gaussian_prob(x, mean, std_dev):
+    '''x : value to evaluate the probability at
+       mean : mean of the distribution
+       std_dev : standard deviation of the distribution
+    '''
+    
+    coeff = 1 / (std_dev * np.sqrt(2 * np.pi))
+    exponent = np.exp(-0.5 * ((x - mean) / std_dev) ** 2)
+    
+    gaussian_probability = coeff * exponent
+    
+    return gaussian_probability
+
+
 #########################################################################
 
 def weighted_moving_average_filter(data_set, weight_list):
