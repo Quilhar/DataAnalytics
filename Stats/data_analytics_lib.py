@@ -88,7 +88,7 @@ def regular_plot(dataset, xaxis_label = '', yaxis_label = '', title = '', color 
     
     plt.tight_layout()
 
-def histogram(dataset, xaxis_label = '', yaxis_label = '', title = '', color = '', edgecolor = ''):
+def histogram(dataset, xaxis_label = 'x_axis', yaxis_label = 'y_axis', title = 'histogram', color = 'blue', edgecolor = 'black'):
     '''
     Function to create a histogram of a dataset:
     - dataset (list or array): A list or array of numerical values
@@ -381,19 +381,22 @@ def graph__least_squares(x_data, y_data, x_axis = '', y_axis = '', title = '', f
     
     a = coefficients[0][0]
     b = coefficients[0][1]
-    c = coefficients[0][2]
+    
     
     if fit == 1:
 
         x_fit = np.linspace(min(x_data), max(x_data), 100)
         y_fit = a * x_fit + b
-        plt.plot(x_fit, y_fit, color='blue', label='Least Squares Fit')
+        plt.plot(x_fit, y_fit, color='green', label='Least Squares Fit')
         
     if fit == 2:
         
+        c = coefficients[0][2]
+        
         x_fit = np.linspace(min(x_data), max(x_data), 100)
+        
         y_fit = a * x_fit ** 2 + b * x_fit + c
-        plt.plot(x_fit, y_fit, color='blue', label='Least Squares Fit')
+        plt.plot(x_fit, y_fit, color='green', label='Least Squares Fit')
 
     
     plt.xlabel(x_axis)
@@ -508,15 +511,15 @@ def error_bar_bounds(x_data, y_data, fit = 1):
             
     return upper_boundy, upper_boundx, lower_boundx, lower_boundy
 
-def graphing_error_bars(x_data, y_data, fit = 1):
+def graphing_error_bars(x_data, y_data, fit = 1, xlabel = 'X values', ylabel = 'Y values', title = 'Error Bounds for Least Squares Fit'):
     upper_boundy, upper_boundx, lower_boundx, lower_boundy = error_bar_bounds(x_data, y_data, fit)
         
     plt.plot(upper_boundx, upper_boundy, color='red', linestyle='--', label='Upper Bound')
     plt.plot(lower_boundx, lower_boundy, color='red', linestyle='--', label='Lower Bound')
     
-    plt.xlabel('X values')
-    plt.ylabel('Y values')
-    plt.title('Error Bounds for Least Squares Fit')
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.title(title)
     plt.legend()
 
 def RMSE(x_data, y_data):
@@ -619,3 +622,19 @@ def fading_moving_average_filter(data_set, weight_list):
         filtered_data.append((weight_list[0] * x[i + n - 1] + (weight_list[1] * filtered_data[i])))
         
     return filtered_data
+
+#########################################################################
+
+def k_means_normalize_data(feature1, feature2):
+    feature1 = np.array(feature1)
+    feature2 = np.array(feature2)
+
+    normalized_feature1 = []
+    normalized_feature2 = []  
+
+    for i in range(len(feature1)):
+        normalized_feature1.append((feature1[i] - np.mean(feature1)) / np.std(feature1))
+    for i in range(len(feature2)):
+        normalized_feature2.append((feature2[i] - np.mean(feature2)) / np.std(feature2))
+
+    return normalized_feature1, normalized_feature2
