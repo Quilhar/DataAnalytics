@@ -638,3 +638,13 @@ def k_means_normalize_data(feature1, feature2):
         normalized_feature2.append((feature2[i] - np.mean(feature2)) / np.std(feature2))
 
     return normalized_feature1, normalized_feature2
+
+def normalize(data):
+    data = np.array(data)
+    normalized_data = []
+    
+    for i in range(len(data)):
+        normalized_value = (data[i] - np.mean(data)) / np.std(data)
+        normalized_data.append(normalized_value)
+        
+    return normalized_data
